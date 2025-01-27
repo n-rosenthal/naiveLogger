@@ -110,6 +110,23 @@ def c_align(text: str, width: int, char: str = " ") -> str:
         case _:
             raise TextAlignmentError(f"Type <{type(text).__name__}> is not supported");
 
+def align(text: str, width: int, char: str = " ", dir: str = "l") -> str:
+    """
+    Aligns `text` with `width` characters in the specified direction `dir` using `char` as the filler character.
+
+    Parameters
+    ----------
+        `text`  (str)   :   the text to be aligned
+        `width` (int)   :   the width of the aligned text
+        `char`  (str)   :   the character to use as the filler character
+        `dir`   (str)   :   the direction of the alignment, either "l" for left, "r" for right, or "c" for center
+
+    Returns
+    -------
+        (str)            :   the aligned text
+    """
+    return pad(text, width, char, dir);
+
 def pad(text: str, width: int, char: str = " ", dir: str = "l") -> str:
     """
     Pads `text` with `char` to `width` characters in the specified direction.
@@ -153,15 +170,67 @@ def shorten(text: str, width: int, short_text: str = "...") -> str:
     else:
         return text;
 
-def f_shorten(text: str, width: int, short_text: str = "...") -> str: return shorten(text, width, short_text + "()");
+def wrap(text: str, width: int = -1, char: str = " ") -> str:
+    """
+    Wraps `text` to `width` characters or less by inserting line breaks.
 
+    Parameters
+    ----------
+        `text`  (str)   :   the text to be wrapped
+        `width` (int)   :   the maximum width of the wrapped text
+        `char`  (str)   :   the character to use as the line break
 
-if __name__ == "__main__":
-    print(l_align("hello", 10));
-    print(l_align([1, 2, 3], 10));
-    print(l_align(b"hello", 10));
+    Returns
+    -------
+        (str)            :   the wrapped text
+    """
+    if width == -1:
+        width = len(char);
+    return char*width + text + char*width;
 
+def tag_wrap(p: str, tag: str) -> str:
+    """
+    Wraps `p` with HTML tags specified by `tag`
 
-    print(shorten("hello", 10));
-    print(shorten([1, 2, 3], 10));
-    print(f_shorten("print", 2));
+    Parameters
+    ----------
+        `p`    (str)   :   the text to be wrapped
+        `tag`  (str)   :   the HTML tag to use for wrapping
+
+    Returns
+    -------
+        (str)            :   the wrapped text
+    """
+    if "<" in tag: tag = tag.replace("<", "");
+    if ">" in tag: tag = tag.replace(">", "");
+    if "/" in tag: tag = tag.replace("/", "");
+    return tagify(tag)[0] + p + tagify(tag)[1];
+
+def tagify(tag: str) -> str:
+    """
+    Returns a tuple containing the opening and closing HTML tags for a given tag.
+
+    Parameters
+    ----------
+        `tag`  (str)   :   the HTML tag to be used for wrapping
+
+    Returns
+    -------
+        (str, str)      :   a tuple containing the opening and closing HTML tags
+    """
+    return ("<" + tag + ">", "</" + tag + ">");
+
+def ident(text: str, lenght: int) -> str:
+    """
+    Indents `text` with `lenght` spaces.
+
+    Parameters
+    ----------
+        `text`  (str)   :   the text to be indented
+        `lenght` (int)   :   the number of spaces to indent with
+
+    Returns
+    -------
+        (str)            :   the indented text
+    """
+    return " "*lenght + text;
