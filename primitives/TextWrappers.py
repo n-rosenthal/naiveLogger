@@ -4,7 +4,7 @@ Implements functions and classes related to text wrapping, aliasing, alignment a
 @author         rdcn
 @version        1.0
 @creation date  2025-01-25
-@last update    2025-01-25
+@last update    2025-01-27
 """
 from typing import List;
 
