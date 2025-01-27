@@ -4,7 +4,7 @@ Extract meaningful data from functions, classes and variables at run time, for l
 @author         rdcn
 @version        1.0
 @creation date  2025-01-26
-@last update    2025-01-26
+@last update    2025-01-27
 """
 
 from typing import Callable, Any, Iterable, List, Dict;
@@ -32,9 +32,9 @@ def get_fdata(fun:      Callable,
             "fname"         :   fun.__name__,
             "fline"         :   fun.__code__.co_firstlineno,
             "fdoc"          :   fun.__doc__,
-            "fargs"         :   ", ".join([type(arg).__name__ + " " + str(arg) for arg in args]),
-            "freturn"       :   str(fun(*args)),
-            "freturn_type"  :   type(fun(*args)).__name__,
+            "fargs"         :   None if args is None else ", ".join([type(arg).__name__ + " " + str(arg) for arg in args]),
+            "freturn"       :   fun(*args) if args is not None else fun(),
+            "freturn_type"  :   type(fun(*args) if args is not None else fun()),
             "fexec_time"    :   f"{(time() - init) // 1000} ms",
         };
     else:
@@ -60,7 +60,7 @@ def get_test_fdata(fun:      Callable,
     """
     fdata : Dict[str, Any] = get_fdata(fun, args);
     fdata["expected"] = expected;
-    fdata["actual"] = fun(*args);
+    fdata["actual"] = fun(*args) if args is not None else fun();
     fdata["equal"] = fdata["expected"] == fdata["actual"];
     return fdata;
 
